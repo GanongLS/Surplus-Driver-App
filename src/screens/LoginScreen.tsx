@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  StyleSheet, 
-  Pressable, 
-  Alert, 
-  KeyboardAvoidingView, 
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  Alert,
+  KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -43,15 +43,21 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 
     if (detectedInputType === 'email') {
       userIsValid = !!drivers.find(
-        driver => driver.email.toLowerCase() === credential.toLowerCase() && driver.password_hash === secret
+        driver =>
+          driver.email.toLowerCase() === credential.toLowerCase() &&
+          driver.password_hash === secret,
       );
     } else if (detectedInputType === 'phone') {
       userIsValid = !!drivers.find(
-        driver => driver.phone_number === credential && driver.pin_hash === secret
+        driver =>
+          driver.phone_number === credential && driver.pin_hash === secret,
       );
     } else {
-        Alert.alert('Input Tidak Valid', 'Masukkan Email atau Nomor HP yang valid.');
-        return;
+      Alert.alert(
+        'Input Tidak Valid',
+        'Masukkan Email atau Nomor HP yang valid.',
+      );
+      return;
     }
 
     if (userIsValid) {
@@ -61,15 +67,46 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
     }
   };
 
+  const handleSecretChange = (text: string) => {
+    if (isSecretVisible) {
+      setSecret(text);
+      return;
+    }
+
+    const currentLength = secret.length;
+    const newLength = text.length;
+
+    if (newLength > currentLength) {
+      // Character added
+      const addedChar = text.substring(currentLength);
+      setSecret(secret + addedChar);
+    } else {
+      // Character removed
+      const removedLength = currentLength - newLength;
+      setSecret(secret.substring(0, secret.length - removedLength));
+    }
+  };
+
+  const getDisplayedSecret = () => {
+    if (isSecretVisible) {
+      return secret;
+    }
+    let maskedSecret = '';
+    for (let i = 0; i < secret.length; i++) {
+      maskedSecret += '•';
+    }
+    return maskedSecret;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView 
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.container}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
       >
         <View style={styles.inner}>
           <Text style={styles.title}>Driver App</Text>
-          
+
           <TextInput
             style={styles.input}
             placeholder="Email atau Nomor HP"
@@ -78,23 +115,29 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
             autoCapitalize="none"
             autoCorrect={false}
           />
-          
+
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.inputInner}
               placeholder={detectedInputType === 'phone' ? 'PIN' : 'Password'}
-              value={secret}
-              onChangeText={setSecret}
-              secureTextEntry={!isSecretVisible} // Kontrol visibilitas
+              value={getDisplayedSecret()}
+              onChangeText={handleSecretChange}
               autoCapitalize="none"
-              keyboardType={detectedInputType === 'phone' ? 'number-pad' : 'default'}
+              keyboardType={
+                detectedInputType === 'phone' ? 'number-pad' : 'default'
+              }
               maxLength={detectedInputType === 'phone' ? 6 : undefined}
             />
-            <Pressable onPress={() => setIsSecretVisible(!isSecretVisible)} style={styles.toggleButton}>
-              <Text style={styles.toggleText}>{isSecretVisible ? 'Hide' : 'Show'}</Text>
+            <Pressable
+              onPress={() => setIsSecretVisible(!isSecretVisible)}
+              style={styles.toggleButton}
+            >
+              <Text style={styles.toggleText}>
+                {isSecretVisible ? 'Hide' : 'Show'}
+              </Text>
             </Pressable>
           </View>
-          
+
           <Pressable style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </Pressable>

@@ -83,3 +83,6 @@ const drivers: Driver[] = [
     pin_hash: '222222',
   },
 ];
+
+
+Ada beberapa Error yang muncul tidak terduga berupa "App content hidden from screen share for security". Setelah beberapa kali saya check, ternyata bug ini terjadi karena secure text entry, jika ada secure text entry, maka android memutuskan tidak bisa screen share/screen capture. sehingga login screen saya akali menggunakan for loop javascript untuk masking secure text entry, pada aplikasi real/produksi pendekatan seperti ini tidak dianjurkan. 
