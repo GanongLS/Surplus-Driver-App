@@ -13,6 +13,7 @@ export type Order = {
   qty: number;
   time: string;
   status: OrderStatus;
+  rejectionReason?: string;
 };
 
 export const orders: Order[] = [

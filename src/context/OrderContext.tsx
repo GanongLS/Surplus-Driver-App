@@ -7,7 +7,11 @@ type OrderContextType = {
   getAvailableOrders: () => Order[];
   getHistory: () => Order[];
   getOrderById: (id: string) => Order | undefined;
-  updateOrderStatus: (id: string, status: OrderStatus) => void;
+  updateOrderStatus: (
+    id: string,
+    status: OrderStatus,
+    rejectionReason?: string,
+  ) => void;
 };
 
 // 2. Membuat Context dengan nilai awal undefined
@@ -21,11 +25,23 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false); // Nanti berguna untuk API call
 
   // Fungsi untuk mengubah status order
-  const updateOrderStatus = (id: string, status: OrderStatus) => {
+  const updateOrderStatus = (
+    id: string,
+    status: OrderStatus,
+    rejectionReason?: string,
+  ) => {
     // Simulasi loading
     setIsLoading(true);
     setOrders(prev =>
-      prev.map(order => (order.id === id ? { ...order, status } : order)),
+      prev.map(order =>
+        order.id === id
+          ? {
+              ...order,
+              status,
+              ...(status === 'Ditolak' && { rejectionReason }),
+            }
+          : order,
+      ),
     );
     // Matikan loading setelah "proses" selesai
     setTimeout(() => setIsLoading(false), 300);
@@ -44,7 +60,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   }, [orders]);
   
   const getHistory = useMemo(() => () => {
-    return orders.filter(order => order.status === 'Selesai');
+    return orders.filter(order => order.status === 'Selesai' || order.status === 'Ditolak');
   }, [orders]);
 
 

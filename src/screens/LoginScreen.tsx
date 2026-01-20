@@ -86,6 +86,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
               value={secret}
               onChangeText={setSecret}
               secureTextEntry={!isSecretVisible} // Kontrol visibilitas
+              autoCapitalize="none"
               keyboardType={detectedInputType === 'phone' ? 'number-pad' : 'default'}
               maxLength={detectedInputType === 'phone' ? 6 : undefined}
             />

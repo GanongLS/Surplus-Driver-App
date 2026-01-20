@@ -37,4 +37,23 @@ Jumlah 2 gelas ](done)
         ◦ Terima Order
         ◦ Tolak Order (opsional, dengan alasan)
 
-upgrade pada src/screens/DetailOrderScreen.tsx kita tidak menemui button aksi tolak order dan terima order. ketika status masih menunggu, driver bisa menerima order atau menolaknya. 
+[upgrade pada src/screens/DetailOrderScreen.tsx kita tidak menemui button aksi tolak order dan terima order. ketika status masih menunggu, driver bisa menerima order atau menolaknya.](done)
+
+[ketika driver menolak order, seharusnya ada pop up yang meminta alasan order ditolak, lalu membuat status pesanan menjadi ditolak dan ada cara menyimpan alasan penolakan, setelah itu diriwayat pesanan, order yang ditolak seharusnya disertakan]
+
+4. Status Order (done)
+Driver dapat mengubah status:
+    • Menunggu
+    • Diterima
+    • Dalam Perjalanan
+    • Selesai 
+
+5. Riwayat Order (done)
+    • Menampilkan daftar order yang telah diselesaikan
+
+-----------------All Primary task done--------------------
+Upgrade Lanjutan 
+
+[Perbaiki styling pada UI terutama penggunaan Icon pada navigation tabbar, gunakan react-native-vector-icon] (done)
+
+Buatkan halaman Driver Profile masukkan pada menu tabbar utama, lalu isinya adalah informasi driver, berupada nama, nomor hape dan email. lalu diberikan tombol logout. 

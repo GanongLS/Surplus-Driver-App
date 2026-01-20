@@ -4,8 +4,14 @@ import LoginScreen from '../screens/LoginScreen';
 import MainTabNavigator from './MainTabNavigator';
 import DetailOrderScreen from '../screens/DetailOrderScreen';
 
+export type RootStackParamList = {
+  Login: undefined;
+  Main: undefined;
+  DetailOrder: { orderId: string };
+};
 
-const Stack = createNativeStackNavigator();
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
   return (

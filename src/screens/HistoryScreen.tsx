@@ -15,7 +15,20 @@ export default function HistoryScreen() {
         {item.juiceType} x {item.qty}
       </Text>
       <Text style={styles.time}>{item.time}</Text>
-      <Text style={styles.status}>Status: {item.status}</Text>
+      <Text
+        style={[
+          styles.status,
+          item.status === 'Ditolak'
+            ? styles.statusDitolak
+            : styles.statusSelesai,
+        ]}>
+        Status: {item.status}
+      </Text>
+      {item.status === 'Ditolak' && item.rejectionReason && (
+        <Text style={styles.rejectionReason}>
+          Alasan: {item.rejectionReason}
+        </Text>
+      )}
     </View>
   );
 
@@ -40,7 +53,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 6,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#fff',
   },
   customerName: {
     fontSize: 16,
@@ -62,7 +75,18 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 13,
     fontWeight: '500',
+  },
+  statusSelesai: {
     color: 'green',
+  },
+  statusDitolak: {
+    color: 'red',
+  },
+  rejectionReason: {
+    marginTop: 4,
+    fontSize: 13,
+    fontStyle: 'italic',
+    color: '#777',
   },
   emptyText: {
     textAlign: 'center',

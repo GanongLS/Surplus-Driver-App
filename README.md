@@ -53,3 +53,33 @@ Implementasi saat ini dibuat dengan beberapa asumsi dan batasan teknis:
     ```bash
     npm run android
     ```
+
+
+untuk login bisa menggunakan data mockup berikut: 
+
+const drivers: Driver[] = [
+  {
+    id: 'DRV-01',
+    name: 'Luki Subandi',
+    email: 'luki@surplus.com',
+    password_hash: 'password123',
+    phone_number: '081234567890',
+    pin_hash: '123456',
+  },
+  {
+    id: 'DRV-02',
+    name: 'Budi Driver',
+    email: 'budi@surplus.com',
+    password_hash: 'password123',
+    phone_number: '081213141516',
+    pin_hash: '111111',
+  },
+  {
+    id: 'DRV-03',
+    name: 'Siti Driver',
+    email: 'siti@surplus.com',
+    password_hash: 'password123',
+    phone_number: '082122232425',
+    pin_hash: '222222',
+  },
+];

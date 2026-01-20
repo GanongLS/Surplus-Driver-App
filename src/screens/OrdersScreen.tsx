@@ -34,7 +34,7 @@ export default function OrdersScreen({ navigation }: any) {
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Pesanan</Text>
-        <Text style={styles.value}>{item.juiceType}</Text>
+        <Text style={styles.value}>Jus {item.juiceType}</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Jumlah</Text>

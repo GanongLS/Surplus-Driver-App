@@ -1,15 +1,29 @@
-import React from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
-import { useOrders } from '../context/OrderContext';
-import { OrderStatus } from '../data/orders';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+  Modal,
+  TextInput,
+  Alert,
+} from 'react-native';
+import {useOrders} from '../context/OrderContext';
+import {OrderStatus} from '../data/orders';
 
-export default function DetailOrderScreen({ route, navigation }: any) {
-  const { getOrderById, updateOrderStatus, isLoading } = useOrders();
+export default function DetailOrderScreen({route, navigation}: any) {
+  const {getOrderById, updateOrderStatus, isLoading} = useOrders();
 
-  const { orderId } = route.params;
+  const {orderId} = route.params;
   const order = getOrderById(orderId);
 
-  const getNextStatus = (status: OrderStatus | undefined): OrderStatus | null => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
+
+  const getNextStatus = (
+    status: OrderStatus | undefined,
+  ): OrderStatus | null => {
     switch (status) {
       case 'Menunggu':
         return 'Diterima';
@@ -24,10 +38,10 @@ export default function DetailOrderScreen({ route, navigation }: any) {
 
   if (isLoading) {
     return (
-        <View style={styles.centered}>
-            <ActivityIndicator size="large" />
-        </View>
-    )
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
   }
 
   if (!order) {
@@ -54,7 +68,14 @@ export default function DetailOrderScreen({ route, navigation }: any) {
   };
 
   const handleDeclineOrder = () => {
-    updateOrderStatus(order.id, 'Ditolak');
+    if (rejectionReason.trim().length === 0) {
+      // a simple validation
+      Alert.alert('Alasan penolakan harus diisi');
+      return;
+    }
+    updateOrderStatus(order.id, 'Ditolak', rejectionReason);
+    setModalVisible(false);
+    setRejectionReason('');
     navigation.goBack();
   };
 
@@ -70,7 +91,7 @@ export default function DetailOrderScreen({ route, navigation }: any) {
           </Pressable>
           <Pressable
             style={[styles.button, styles.buttonDecline]}
-            onPress={handleDeclineOrder}
+            onPress={() => setModalVisible(true)}
             disabled={isLoading}>
             <Text style={styles.buttonText}>Tolak Order</Text>
           </Pressable>
@@ -93,6 +114,39 @@ export default function DetailOrderScreen({ route, navigation }: any) {
 
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Alasan Penolakan</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setRejectionReason}
+              value={rejectionReason}
+              placeholder="Masukkan alasan penolakan"
+              multiline
+            />
+            <View style={styles.modalButtons}>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.textStyle}>Batal</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonSubmit]}
+                onPress={handleDeclineOrder}>
+                <Text style={styles.textStyle}>Simpan</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.card}>
         <Text style={styles.title}>Detail Order</Text>
 
@@ -176,5 +230,63 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '80%',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  input: {
+    height: 100,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    width: '100%',
+    textAlignVertical: 'top',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  buttonClose: {
+    backgroundColor: '#e74c3c',
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  buttonSubmit: {
+    backgroundColor: '#2e86de',
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
